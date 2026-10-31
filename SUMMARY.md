@@ -31,6 +31,7 @@
 * [ISSUE-04: Legacy FUSE and eBPF Storage](docs/issues/fuse-bpf.md)
 * [ISSUE-05: SELinux Vendor Policy Compatibility](docs/issues/selinux-compatibility.md)
 * [ISSUE-06: USB UDC Gadget Binding](docs/issues/usb-adb-initialization.md)
+* [ISSUE-07: Android 16 VNDK Deprecation & Vendor Dependencies](docs/issues/vndk-deprecation.md)
 
 ## Patches & Modifications
 * [Patch Overview](docs/patches/index.md)

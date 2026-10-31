@@ -74,6 +74,7 @@ nav:
       - Legacy FUSE & eBPF Storage: docs/issues/fuse-bpf.md
       - SELinux Compatibility: docs/issues/selinux-compatibility.md
       - USB UDC Gadget Binding: docs/issues/usb-adb-initialization.md
+      - Android 16 VNDK Deprecation: docs/issues/vndk-deprecation.md
   - Patches & Modifications:
       - Overview: docs/patches/index.md
       - Patch Inventory: docs/patches/patch-inventory.md

@@ -14,3 +14,4 @@ This section provides in-depth technical investigations, root-cause analyses, cr
 | [**`ISSUE-04`**](fuse-bpf.md) | Storage / eBPF | **Critical Blocker** | Android 16 FUSE-BPF requirement unsupported by Linux 4.14 kernel. | **RESOLVED (Fallback)**|
 | [**`ISSUE-05`**](selinux-compatibility.md) | Security / Sepolicy| **Major Blocker** | Missing platform policy rules for legacy MediaTek vendor domains. | **MITIGATED (Permissive)**|
 | [**`ISSUE-06`**](usb-adb-initialization.md) | USB / Debugging | **Diagnostic Blocker** | USB ConfigFS gadget failed to bind to `11201000.usb` peripheral controller. | **RESOLVED** |
+| [**`ISSUE-07`**](vndk-deprecation.md) | Linking / VNDK | **Build Blocker** | Legacy Android 10 vendor HAL dependencies on deprecated VNDK-29 libraries. | **DOCUMENTED (Mitigation Defined)** |
