@@ -1,0 +1,104 @@
+site_name: Casper VIA S48 Android Development Knowledge Base
+site_description: Complete technical documentation, reverse engineering, kernel overclocking, and Android 16 bring-up for Casper VIA S48 (MT8168 / F716).
+site_author: Atilla Tokmak
+repo_url: https://github.com/AtillaTokmak/via_s48_development_wiki
+repo_name: AtillaTokmak/via_s48_development_wiki
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: README.md
+  - Hardware:
+      - Overview: docs/hardware/overview.md
+      - MediaTek MT8168 SoC: docs/hardware/mt8168.md
+      - Partition Layout: docs/hardware/partition-layout.md
+      - Kernel Architecture: docs/hardware/kernel.md
+      - Display & Touchscreen: docs/hardware/display-touch.md
+  - Firmware:
+      - Stock Android 10: docs/firmware/stock-android10.md
+      - Backup & Restore: docs/firmware/backup-and-restore.md
+      - Android Verified Boot (AVB): docs/firmware/avb.md
+      - Dynamic Partitions: docs/firmware/dynamic-partitions.md
+  - Experiments Journal:
+      - Overview: docs/experiments/index.md
+      - Android 14 GSI Bring-Up: docs/experiments/android14/gsi-bringup.md
+      - Android 15 crDroid Bootloop: docs/experiments/android15/crdroid-bootloop.md
+      - Android 16 AxionOS Bring-Up: docs/experiments/android16/axionos-bringup.md
+      - Android 16 Stock Kernel Test: docs/experiments/android16/stock-kernel-test.md
+      - Android 16 2.1 GHz Overclock Test: docs/experiments/android16/oc-2.1ghz-test.md
+  - Issues & Root Causes:
+      - Overview: docs/issues/index.md
+      - System Server MP2 Codec Crash: docs/issues/system-server-mp2-crash.md
+      - File-Based Encryption Deadlock: docs/issues/fbe-encryption.md
+      - VINTF FCM Level 4 Integration: docs/issues/vintf-fcm4.md
+      - Legacy FUSE & eBPF Storage: docs/issues/fuse-bpf.md
+      - SELinux Compatibility: docs/issues/selinux-compatibility.md
+      - USB UDC Gadget Binding: docs/issues/usb-adb-initialization.md
+  - Patches & Modifications:
+      - Overview: docs/patches/index.md
+      - Patch Inventory: docs/patches/patch-inventory.md
+  - Development & Building:
+      - Build Environment: docs/development/environment.md
+      - Device Tree Integration: docs/development/device-tree.md
+      - Vendor Extraction Tree: docs/development/vendor-tree.md
+      - Kernel Compilation: docs/development/kernel-build.md
+      - ROM Compilation: docs/development/rom-build.md
+      - Boot Image Packaging: docs/development/boot-image-packaging.md
+      - Source Integration: docs/development/source-integration.md
+  - Testing & Validation:
+      - Hardware Subsystem Status: docs/testing/hardware-status.md
+      - Performance & Frequency Scaling: docs/testing/performance.md
+      - Boot Validation Suite: docs/testing/boot-validation.md
+  - Troubleshooting:
+      - Boot Animation Hangs: docs/troubleshooting/boot-animation-hang.md
+      - Brick Recovery: docs/troubleshooting/recovery.md
+      - Early ADB Debugging: docs/troubleshooting/adb-debugging.md
+  - References:
+      - Repositories: docs/references/repositories.md
+      - Upstream Sources: docs/references/upstream-sources.md
+      - Glossary: docs/references/glossary.md
+  - Templates:
+      - Experiment Template: templates/experiment.md
+      - Issue Template: templates/issue.md
+      - Patch Template: templates/patch.md
+      - Test Report Template: templates/test-report.md
