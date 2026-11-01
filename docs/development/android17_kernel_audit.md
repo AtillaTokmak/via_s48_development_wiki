@@ -50,34 +50,44 @@ This document records the empirical investigation into running Android 17 (Bakla
 
 ---
 
-## 3. Hypotheses Under Active Investigation
+## 3. Superseded Hypotheses vs. Confirmed Root Causes (Historical Record)
 
-The tablet's return to bootloader fastboot during Android 17 boot is actively being isolated across the following candidate stages:
+> [!NOTE]
+> **Historical Record & Superseded Hypotheses:**
+> Earlier revisions of this audit hypothesized that the tablet's return to bootloader fastboot during Android 17 boot might be caused by missing Linux 5.x syscalls (`SIGSYS`), mandatory `binderfs`, or unified `cgroup v2` freezer enforcement. Those hypotheses are **superseded** by live telemetry from our working Android 16 baseline (`android16_cgroup_bpf_mounts.txt`, `android16_boot_logcat.log`) and direct binary/filesystem comparison between `Axion-2.9-patched.img` and `BlazeAOSP-patched.img`.
 
-### Hypothesis A: `libprocessgroup_setup` Cgroup v2 Controller Activation
+### 3.1 Confirmed Root Causes of the `BlazeAOSP-patched.img` Boot-to-Fastboot Failure
+1. **Absence of `com.android.vndk.v29.apex` in `BlazeAOSP` (`/system/system_ext/apex/`):**
+   - `BlazeAOSP` only shipped VNDK APEXes `v31`–`v34`, whereas Casper VIA S48's Android 10 vendor requires `ro.vndk.version=29` (present in `Axion-2.9-patched.img` as `com.android.vndk.v29.apex`, mounted at `/bootstrap-apex/com.android.vndk.v29@1` during `early-init`).
+2. **Late `fstab.mt8168` Bind-Mount Ordering (`post-fs` vs `early-fs`):**
+   - Stock `/vendor/etc/init/hw/init.mt8168.rc` runs `mount_all /vendor/etc/fstab.mt8168` inside `on fs`. Placing the unencrypted `fstab.mt8168` bind-mount inside `on post-fs` in `casper_compat.rc` meant `mount_all` executed against the unpatched FBE `fstab.mt8168`, triggering `reboot,vold-failed`.
+3. **Removal of `on load-bpf-programs` Trigger in `netbpfload.rc`:**
+   - In Android 17, `on load-bpf-programs` moved from `/system/etc/init/hw/init.rc` into `/system/etc/init/netbpfload.rc`. Overwriting `netbpfload.rc` with the 4-line AxionOS service definition deleted the `on load-bpf-programs` trigger.
+
+### 3.2 Retained Secondary Investigation Targets (Post-Fix Verification)
+
+The following secondary items remain documented for verification once the three primary blockers above are patched:
+
+#### Secondary Check A: `libprocessgroup_setup` Cgroup v2 Controller Activation
 - **Mechanism:** In `/system/etc/cgroups.json`, the `Cgroups2` hierarchy specifies:
   ```json
   "Controllers": [
     { "Controller": "freezer", "Path": "." }
   ]
   ```
-- **Observation:** `"Optional": true` is set for `memory`, but omitted for `freezer`.
-- **Testable Question:** Does Linux 4.14 return `-EINVAL` when `init` attempts to write `+freezer` to `/sys/fs/cgroup/cgroup.subtree_control`, causing `libprocessgroup_setup.so` to call `LOG(FATAL)` and abort `init`?
-- **Proposed Test:** Add `"Optional": true` to the `freezer` controller entry in `cgroups.json`.
+- **Observation:** Live `/proc/mounts` on Android 16 confirms `/sys/fs/cgroup` mounts `cgroup2` alongside v1 `/sys/fs/cgroup/freezer`. Adding `"Optional": true` to the `Cgroups2` `freezer` entry in `cgroups.json` ensures `libprocessgroup` never aborts if `+freezer` write to `cgroup.subtree_control` returns `-EINVAL`.
 
-### Hypothesis B: `apexd-bootstrap` Activation Failure
-- **Mechanism:** `/system/etc/init/apexd.rc` contains:
-  ```rc
-  service apexd-bootstrap /system/bin/apexd --bootstrap
-      ...
-      reboot_on_failure reboot,bootloader,bootstrap-apexd-failed
-  ```
-- **Testable Question:** Does `apexd-bootstrap` fail while mounting bootstrap APEXes (`com.android.runtime`, `com.android.art`, `com.android.i18n`, `com.android.conscrypt`) due to loopback, dm-verity, or namespace requirements?
-- **Proposed Test:** Comment out `reboot_on_failure` in `apexd.rc` to allow init to proceed and log diagnostics rather than instantly rebooting.
+#### Secondary Check B: `apexd-bootstrap` Activation Diagnostics
+- **Mechanism:** `/system/etc/init/apexd.rc` contains `reboot_on_failure reboot,bootloader,bootstrap-apexd-failed`. With `com.android.vndk.v29.apex` injected, `apexd-bootstrap` mounts all bootstrap APEXes cleanly using `CLONE_NEWNS` and `loop0..loopN`.
 
-### Hypothesis C: BCB / `misc` Partition Boot Reason Persistence
-- **Mechanism:** The bootloader control block in `/dev/block/by-name/para` (`misc`) may retain a persistent bootloader flag from previous fastboot transitions.
-- **Proposed Test:** Check and clear the `misc` BCB message block.
+---
+
+## 4. Related Audit Documentation
+
+- [Android 17 Minimum Kernel Requirements](android17-minimum-kernel-requirements.md)
+- [Kernel Upgrade Feasibility & Strategic Recommendation](kernel-upgrade-feasibility.md)
+- [MT8168 Hardware Driver Migration Audit](mt8168-driver-migration.md)
+- [Kernel Version Technical Comparison Matrix (`4.14` – `5.15`)](kernel-version-comparison.md)
 
 ---
 

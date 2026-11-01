@@ -66,6 +66,7 @@ nav:
       - Android 16 AxionOS Bring-Up: docs/experiments/android16/axionos-bringup.md
       - Android 16 Stock Kernel Test: docs/experiments/android16/stock-kernel-test.md
       - Android 16 2.1 GHz Overclock Test: docs/experiments/android16/oc-2.1ghz-test.md
+      - Android 17 BlazeAOSP Bring-Up: docs/experiments/android17/blazeaosp-bringup.md
   - Issues & Root Causes:
       - Overview: docs/issues/index.md
       - System Server MP2 Codec Crash: docs/issues/system-server-mp2-crash.md
@@ -86,6 +87,11 @@ nav:
       - ROM Compilation: docs/development/rom-build.md
       - Boot Image Packaging: docs/development/boot-image-packaging.md
       - Source Integration: docs/development/source-integration.md
+      - Android 17 Kernel Audit: docs/development/android17_kernel_audit.md
+      - Android 17 Minimum Kernel Requirements: docs/development/android17-minimum-kernel-requirements.md
+      - Kernel Upgrade Feasibility: docs/development/kernel-upgrade-feasibility.md
+      - MT8168 Driver Migration Audit: docs/development/mt8168-driver-migration.md
+      - Kernel Version Comparison: docs/development/kernel-version-comparison.md
   - Testing & Validation:
       - Hardware Subsystem Status: docs/testing/hardware-status.md
       - Performance & Frequency Scaling: docs/testing/performance.md

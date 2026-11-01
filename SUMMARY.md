@@ -22,6 +22,7 @@
 * [EXP-003: Android 16 AxionOS Bring-Up](docs/experiments/android16/axionos-bringup.md)
 * [EXP-004: Stock Kernel Compatibility Test](docs/experiments/android16/stock-kernel-test.md)
 * [EXP-005: 2.1 GHz Overclocked Kernel Verification](docs/experiments/android16/oc-2.1ghz-test.md)
+* [EXP-006: Android 17 BlazeAOSP Bring-Up](docs/experiments/android17/blazeaosp-bringup.md)
 
 ## Issues & Root Causes
 * [Issue Tracker Overview](docs/issues/index.md)
@@ -45,6 +46,11 @@
 * [ROM Compilation](docs/development/rom-build.md)
 * [Boot Image Packaging](docs/development/boot-image-packaging.md)
 * [Source Tree Integration](docs/development/source-integration.md)
+* [Android 17 Kernel Compatibility Audit](docs/development/android17_kernel_audit.md)
+* [Android 17 Minimum Kernel Requirements](docs/development/android17-minimum-kernel-requirements.md)
+* [Kernel Upgrade Feasibility](docs/development/kernel-upgrade-feasibility.md)
+* [MT8168 Hardware Driver Migration Audit](docs/development/mt8168-driver-migration.md)
+* [Kernel Version Comparison Matrix](docs/development/kernel-version-comparison.md)
 
 ## Testing & Validation
 * [Hardware Subsystem Status](docs/testing/hardware-status.md)
