@@ -85,9 +85,17 @@ Casper VIA S48 vendor specifies `ro.vndk.version=29`. `BlazeAOSP-GSI/system.img`
   - Size: `3,408,465,920` bytes
   - SHA-256: `4d1a5aee6a407bed3a3fe1fd571ab0db3b5577ebe31535c52b67b65d39843f03`
 - **Rebuilt Patched Image:** `/home/atilla/Desktop/Via S48/BlazeAOSP-patched.img`
-  - Size: `3,460,825,088` bytes (`844,928` 4KB blocks — fits directly inside the tablet's active `3,460,829,184`-byte `system` logical partition)
+  - Size: `3,460,825,088` bytes (`844,928` 4KB blocks = `6,759,424` 512-byte sectors)
   - SHA-256: `1fe071403521c75cb9e65ad542d4b1ae85056619e11873a7e715b9f1368e0cdc`
-  - Filesystem Check (`e2fsck -fn`): `clean, 4526/4992 files (0.8% non-contiguous), 841872/844928 blocks`
+  - Format: Raw `ext4` (`UUID=2fdde14e-7d6c-5725-9b1e-ff1a47ddf836`)
+  - Filesystem Check (`e2fsck -fn`): `clean, 4526/4992 files (0.8% non-contiguous), 841872/844928 blocks` (`3,056` free 4KB blocks = `11.94 MiB` free inside image)
+- **Live `super` Partition Layout (`lpdump /dev/block/by-name/super` on Active Tablet):**
+  - Total `super` size: `5,891,620,864` bytes (`11,507,072` sectors); `main` group max size: `5,890,572,288` bytes (`11,505,024` sectors)
+  - `vendor` (readonly, group `main`): `619,232` sectors (`317,046,784` bytes; physical sectors `2048..621280`)
+  - `product` (readonly, group `main`): `2,244,272` sectors (`1,149,067,264` bytes; physical sectors `622592..2866864`)
+  - `system` (readonly, group `main`): Currently `5,997,184` sectors (`3,070,558,208` bytes; 4 extents ending at physical sector `8862736`), automatically sized by `fastbootd` when `Axion-2.9-patched.img` (`3,070,558,208` bytes) was flashed during rollback
+  - **Unallocated Free Space in `super`:** `2,642,288` contiguous sectors (`8862736..11505024`) = **`1,352,851,456` bytes (`1,290.18 MiB`)**
+  - **Dynamic Partition Resize Requirement:** Flashing `BlazeAOSP-patched.img` (`3,460,825,088` bytes = `6,759,424` sectors) expands `system` by `762,240` sectors (`390,266,880` bytes) out of the `2,642,288` free sectors at the end of `super`, leaving `1,880,048` sectors (`962,584,576` bytes = `917.99 MiB`) free and leaving `vendor` and `product` completely untouched.
 
 ### Complete File-Level Diff (`BlazeAOSP-GSI/system.img` vs. `BlazeAOSP-patched.img`)
 
@@ -125,14 +133,22 @@ If the tablet drops back to fastboot during the test boot, flashing back `Axion-
 
 ### Phase A: Controlled Android 17 Diagnostic Test Boot
 ```bash
-# 1. Reboot from running Android 16 into userspace fastbootd
-adb reboot fastboot
+# 1. Clear any stale /cache/android17_boot logs and reboot from Android 16 into userspace fastbootd
+HOME=/tmp adb -P 5038 shell "rm -rf /cache/android17_boot && sync"
+HOME=/tmp adb -P 5038 reboot fastboot
 
-# 2. Flash only the rebuilt Android 17 system image (fits existing 3,460,829,184-byte system partition)
+# 2. Verify userspace fastbootd mode (must return "yes")
+fastboot getvar is-userspace
+
+# 3. Explicitly resize logical partition system from 3,070,558,208 to 3,460,825,088 bytes
+#    (Allocates 762,240 sectors from the 2,642,288 free sectors at the end of super; vendor and product untouched)
+fastboot resize-logical-partition system 3460825088
+
+# 4. Flash only the rebuilt Android 17 system image
 #    Preserve existing boot (boot_oc_2.1ghz_android16.img), vendor, product, userdata, and cache
 fastboot flash system "/home/atilla/Desktop/Via S48/BlazeAOSP-patched.img"
 
-# 3. Reboot and monitor for 60 seconds
+# 5. Reboot and monitor for 60 seconds
 fastboot reboot
 ```
 
@@ -150,6 +166,6 @@ fastboot flash system "/home/atilla/Desktop/Via S48/Axion-2.9-patched.img"
 fastboot reboot
 
 # 4. Once booted, pull the persistent Android 17 early-boot logs from /cache/android17_boot/
-adb wait-for-device
-adb pull /cache/android17_boot "/home/atilla/Desktop/Via S48/android17_investigation/boot_logs_attempt2"
+HOME=/tmp adb -P 5038 wait-for-device
+HOME=/tmp adb -P 5038 pull /cache/android17_boot "/home/atilla/Desktop/Via S48/android17_investigation/boot_logs_attempt2"
 ```
