@@ -1,96 +1,104 @@
-# Android 17 (Baklava / API 37) vs Linux 4.14.141 Kernel Architecture Audit
+# Android 17 (Baklava / API 37) Investigation & Kernel Compatibility Audit
 
 - **Target Device:** Casper VIA S48 (`MT8168` / `F716`)
 - **Active Kernel Baseline:** Linux 4.14.141 (`SMP PREEMPT #10`, 2.1 GHz Overclocked)
 - **Target OS:** BlazeAOSP Android 17 (`CP2A.260605.016`, API Level 37)
 - **Defconfig:** `arch/arm64/configs/tb8168p1_64_bsp_f716_defconfig`
-- **Result:** **ARCHITECTURAL HARD-BLOCKER IDENTIFIED**
+- **Status:** **ACTIVE INVESTIGATION — EMPIRICAL RECTIFICATION APPLIED**
 
 ---
 
-## 1. Executive Summary
+## 1. Objective & Empirical Framework
 
-During the attempted bring-up of BlazeAOSP Android 17 on the Casper VIA S48, the device repeatedly crashed during early userspace initialization and rebooted directly into Little Kernel (LK Fastboot). 
+This document records the empirical investigation into running Android 17 (Baklava / API 37) on the Casper VIA S48 tablet powered by MediaTek MT8168 and Linux kernel 4.14.141.
 
-Forensic analysis confirms this is **not** an image corruption, partition geometry, or storage corruption issue. It is a fundamental architectural divergence: **Android 17 (Baklava) strictly mandates kernel interfaces, eBPF subsystems, and unified Cgroup v2 architectures introduced in Linux 5.4+ and 5.10+, which do not exist in the Linux 4.14.141 LTS kernel.**
-
-While AxionOS Android 16 (API 36) boots successfully on Linux 4.14 because of specialized Treble runtime fallbacks (`treble-overlay-tethering-nobpf.apk`, non-fatal BPF logging, and disabled `reboot_on_failure`), pure Android 17 GSIs invoke modern kernel syscalls unconditionally. When Linux 4.14 returns `-ENOSYS` or `-EINVAL` on critical init operations, the process terminates via `SIGSYS` or panic, triggering the MediaTek hardware watchdog back into LK Fastboot.
-
----
-
-## 2. Kernel Gap Matrix (Linux 4.14 vs Android 17 Requirements)
-
-| Subsystem | Linux 4.14.141 Status | Android 17 Requirement | Impact on Boot |
-| :--- | :--- | :--- | :--- |
-| **eBPF Ring Buffer** | **Absent** (Added in 5.8) | Mandatory for `netbpfload` & `tethering` | **FATAL**: `bpf(BPF_MAP_CREATE, BPF_MAP_TYPE_RINGBUF)` returns `-EINVAL`. |
-| **BPF Type Format (BTF)** | **Absent** (Added in 5.2) | CO-RE (Compile Once - Run Everywhere) | **FATAL**: BPF programs fail kernel verifier. |
-| **Cgroup v2 Freezer** | **Absent** (Only Cgroup v1 `/dev/freezer`) | `/sys/fs/cgroup/.../cgroup.freeze` (Linux 5.2+) | **CRASH**: `system_server` crashes in `CachedAppOptimizer`. |
-| **Kernel Namespaces** | `# CONFIG_NAMESPACES is not set` in defconfig | Mandatory for `apexd`, mount isolation | **FATAL**: `apexd-bootstrap` fails with `reboot,bootloader,bootstrap-apexd-failed`. |
-| **BinderFS** | **Absent** (Only legacy `/dev/binder`) | Dynamic IPC node mounting (`/dev/binderfs`) | **BLOCKING**: Service manager expects modern IPC tree. |
-| **FUSE-BPF / Passthrough** | **Absent** (Upstream 6.x / GKI 5.15) | Android 17 passthrough storage daemon | **HANG**: Storage mounting deadlocks without override. |
-| **Syscall Table Limit** | Max generic syscall: `__NR_statx` (291) | Syscalls 292 to 450+ (`pidfd`, `clone3`, `openat2`) | **SIGSYS**: Bionic libc traps missing syscalls. |
+> [!IMPORTANT]
+> **Methodological Principle:**
+> We strictly distinguish between **confirmed empirical facts** (verified by binary analysis, filesystem inspection, or execution logs) and **hypotheses under test**. Unsupported syscalls in Linux return `-ENOSYS` by default; Bionic libc implements extensive fallback paths for modern syscalls (`clone3` -> `clone`, `faccessat2` -> `faccessat`, `openat2` -> `openat`). Syscall absence alone does **not** inherently imply `SIGSYS` unless explicitly trapped by a restrictive Seccomp filter.
 
 ---
 
-## 3. Detailed Technical Breakdown
+## 2. Confirmed Findings & Validated Mitigations
 
-### 3.1 The Missing Syscall Spectrum (292 – 450)
-In `kernel_casper_mt8168/include/uapi/asm-generic/unistd.h`, the syscall table strictly terminates at:
-```c
-#define __NR_statx 291
-#undef __NR_syscalls
-#define __NR_syscalls 292
-```
+### 2.1 VINTF Framework Compatibility Matrix Level 4
+- **Fact:** Casper VIA S48 vendor manifest specifies `target-level="4"` (Android 10 FCM).
+- **Finding:** BlazeAOSP GSI only included compatibility matrices for FCM 7, 8, 202404, 202504, and 202604.
+- **Mitigation:** Injected `compatibility_matrix.4.xml` into `/system/etc/vintf/compatibility_matrix.4.xml`.
 
-Modern Android 17 Bionic libc and `init` rely on the following missing syscalls:
-1. **`clone3` (435):** Used by `pthread_create` and process spawning. If intercepted by seccomp without graceful fallback, throws `SIGSYS`.
-2. **`pidfd_open` (434), `pidfd_send_signal` (424), `pidfd_getfd` (438):** Used by `ProcessInfo` and `ActivityManager` to eliminate PID recycling race conditions.
-3. **`openat2` (437):** Used by Android 17 `init` for secure directory traversal with `RESOLVE_NO_SYMLINKS`.
-4. **`faccessat2` (439):** Used by Bionic for flag-aware permission queries.
-5. **`epoll_pwait2` (441):** Used by Android 17 `Looper` / `MessageQueue` for nanosecond timeouts.
-6. **`memfd_secret` (447):** Used by Keystore2 and Conscrypt for enclave-like memory secrecy.
+### 2.2 HIDL Service Manager Initialization
+- **Fact:** Casper VIA S48 vendor HALs (audio@5.0, graphics.allocator@2.0, composer@2.1) require HIDL.
+- **Finding:** Modern AOSP GSIs set `hwservicemanager.always_sets_disabled=true` in `build.prop`.
+- **Mitigation:** Set `hwservicemanager.always_sets_disabled=false` and ensured explicit startup triggers.
 
-### 3.2 The Cgroup v2 & Freezer Incompatibility
-- In Android 17, Google completely removed Cgroup v1 support from AOSP.
-- Linux 4.14 only supports Cgroup v1 freezing (`CONFIG_CGROUP_FREEZER=y`).
-- Cgroup v2 freezing (`cgroup.freeze` file interface) was merged in Linux 5.2.
-- When `ActivityManagerService` attempts to write to `/sys/fs/cgroup/uid_*/cgroup.freeze`, the write fails with `ENOENT`, terminating the core system server.
+### 2.3 Explicit APEX Failure Reboot Triggers (`reboot_on_failure`)
+- **Fact:** `com.android.tethering` APEX contains `etc/netbpfload.35rc` defining:
+  ```rc
+  service bpfloader /apex/com.android.tethering/bin/netbpfload
+      ...
+      reboot_on_failure reboot,bpfloader-failed
+  ```
+- **Finding:** If `netbpfload` exits non-zero on older kernels lacking modern BPF map types, Android `init` executes an immediate reboot into bootloader. In contrast, our working AxionOS Android 16 image had this `reboot_on_failure` directive explicitly commented out by the Treble maintainer.
+- **Mitigation:** Cleaned `netbpfload.rc`, `netd.rc`, and deployed the AxionOS-proven tethering APEX payload.
 
-### 3.3 The eBPF Verification Failure
-- In Android 17, `netbpfload` is built against modern BPF helpers.
-- It attempts to create `BPF_MAP_TYPE_RINGBUF` and `BPF_MAP_TYPE_SK_STORAGE`.
-- Linux 4.14 returns `-EINVAL`.
-- In pure AOSP, `netbpfload` triggers `reboot_on_failure reboot,bpfloader-failed` or `netd` fails to start.
+### 2.4 FUSE-BPF Daemon Override
+- **Fact:** Linux 4.14 lacks upstream `CONFIG_FUSE_BPF`.
+- **Mitigation:** Verified and applied `persist.sys.fuse.bpf.override=false` and `persist.sys.phh.bpf=false`.
 
----
-
-## 4. Backporting Feasibility & Engineering Risk Analysis
-
-Could these subsystems be backported to Linux 4.14.141?
-
-| Backport Scope | Patches Required | Risk to Existing MediaTek Drivers | Feasibility |
-| :--- | :--- | :--- | :--- |
-| **`CONFIG_NAMESPACES=y`** | 0 (Defconfig toggle) | Low risk | **Trivial** |
-| **Syscall Stubs (pidfd, clone3)** | ~40-60 upstream commits | Moderate risk (breaks Bionic fallbacks if buggy) | **Medium** |
-| **Cgroup v2 Freezer** | ~85 upstream commits (5.0 to 5.2) | High risk (clashes with MediaTek sched/sched_tune) | **High / Risky** |
-| **eBPF Ringbuf & Subsystem** | 200+ commits (5.2 to 5.8) | Extreme risk (clashes with MTK network drivers) | **Practically Infeasible** |
-| **BinderFS** | ~30 commits | Moderate risk | **Medium** |
-
-**Conclusion on Kernel Backporting:**
-Attempting to backport the entire Linux 5.8 eBPF subsystem and Linux 5.2 Cgroup v2 hierarchy into MediaTek's proprietary 4.14.141 BSP will severely jeopardize the stability of:
-- MediaTek Bifrost/Midgard Mali GPU DDK (`libGLES_mali.so`)
-- MT6631 Wi-Fi/BT connectivity drivers (`wmt_drv`, `wlan_drv_gen4m`)
-- MT6357 PMIC voltage regulator interface
-- Display panel DRM timing (`jd9365da`)
+### 2.5 MediaTek MP2 Codec UBSAN Crash Mitigation
+- **Fact:** Legacy MediaTek audio codec declarations trigger integer overflow aborts in modern `libstagefright`.
+- **Mitigation:** Sanitized `media_codecs_mediatek_audio.xml` bind-mounted over vendor at `post-fs`.
 
 ---
 
-## 5. Strategic Recommendation
+## 3. Hypotheses Under Active Investigation
 
-1. **Retain Android 16 (AxionOS 2.9) as the Production Target:**
-   - AxionOS Android 16 represents the optimal apex of performance, modern UI, and hardware compatibility on the Casper VIA S48.
-   - It is fully verified with 2.1 GHz overclocking, Mali hardware composition (60 FPS), audio, touch, Wi-Fi, and DFE storage.
-2. **Document Android 17 Findings in Wiki:**
-   - Record this analysis in `via_s48_development_wiki` so future developers do not repeat the cycle without knowing the exact syscall and eBPF boundaries.
-3. **Restore Tablet to Android 16:**
-   - Re-flash [`Axion-2.9-patched.img`](file:///home/atilla/Desktop/Via%20S48/Axion-2.9-patched.img) to return the DUT to a responsive, working state.
+The tablet's return to bootloader fastboot during Android 17 boot is actively being isolated across the following candidate stages:
+
+### Hypothesis A: `libprocessgroup_setup` Cgroup v2 Controller Activation
+- **Mechanism:** In `/system/etc/cgroups.json`, the `Cgroups2` hierarchy specifies:
+  ```json
+  "Controllers": [
+    { "Controller": "freezer", "Path": "." }
+  ]
+  ```
+- **Observation:** `"Optional": true` is set for `memory`, but omitted for `freezer`.
+- **Testable Question:** Does Linux 4.14 return `-EINVAL` when `init` attempts to write `+freezer` to `/sys/fs/cgroup/cgroup.subtree_control`, causing `libprocessgroup_setup.so` to call `LOG(FATAL)` and abort `init`?
+- **Proposed Test:** Add `"Optional": true` to the `freezer` controller entry in `cgroups.json`.
+
+### Hypothesis B: `apexd-bootstrap` Activation Failure
+- **Mechanism:** `/system/etc/init/apexd.rc` contains:
+  ```rc
+  service apexd-bootstrap /system/bin/apexd --bootstrap
+      ...
+      reboot_on_failure reboot,bootloader,bootstrap-apexd-failed
+  ```
+- **Testable Question:** Does `apexd-bootstrap` fail while mounting bootstrap APEXes (`com.android.runtime`, `com.android.art`, `com.android.i18n`, `com.android.conscrypt`) due to loopback, dm-verity, or namespace requirements?
+- **Proposed Test:** Comment out `reboot_on_failure` in `apexd.rc` to allow init to proceed and log diagnostics rather than instantly rebooting.
+
+### Hypothesis C: BCB / `misc` Partition Boot Reason Persistence
+- **Mechanism:** The bootloader control block in `/dev/block/by-name/para` (`misc`) may retain a persistent bootloader flag from previous fastboot transitions.
+- **Proposed Test:** Check and clear the `misc` BCB message block.
+
+---
+
+## 4. Subsystem Comparison: AxionOS 16 vs BlazeAOSP 17
+
+| Subsystem | AxionOS 2.9 (Android 16 - Verified Working) | BlazeAOSP (Android 17 - In Progress) |
+| :--- | :--- | :--- |
+| **Kernel Used** | `boot_oc_2.1ghz_android16.img` (Linux 4.14.141 @ 2.1 GHz) | Same (`boot_oc_2.1ghz_android16.img` / `boot_gsi.img`) |
+| **Ramdisk** | DFE Patched Initramfs (`791,547` bytes) | Same DFE Initramfs |
+| **Target API** | API Level 36 (`BP4A.251205.006`) | API Level 37 (`CP2A.260605.016`) |
+| **Treble Shims** | Included phh `rw-system.sh`, `treble-overlay-*` | Pure AOSP / Lineage GSI (Requires explicit init shims) |
+| **`netbpfload.rc`** | No `reboot_on_failure` | Stripped and patched to match AxionOS |
+| **`apexd.rc`** | Standard AOSP | Retains `reboot,bootloader,bootstrap-apexd-failed` |
+
+---
+
+## 5. Rollback Baseline Readiness
+
+To ensure zero downtime and absolute device safety, the verified working Android 16 baseline is fully prepared and staged for immediate deployment upon explicit user confirmation:
+
+- **System Image:** [`Axion-2.9-patched.img`](file:///home/atilla/Desktop/Via%20S48/Axion-2.9-patched.img) (`3,070,558,208 bytes`, SHA-256: `40cd5fa1e4e2e8ed407a89907ad1c797ae409bb272127fab904e96787154aba1`)
+- **Boot Image:** [`boot_oc_2.1ghz_android16.img`](file:///home/atilla/Desktop/Via%20S48/boot_oc_2.1ghz_android16.img) (`11,079,680 bytes`, SHA-256: `879da6cfc5ce2e84cc5d54a21c69bbee28bf14278743dfe2ae1a711418fcbef9`)
+- **VBMeta:** [`vbmeta_disabled.img`](file:///home/atilla/Desktop/Via%20S48/vbmeta_disabled.img) (`256 bytes`, SHA-256: `53ea4aee4a0f0fd0dc0dc4556bf3143f39ae7799aa55f35dbe8eb9ee482873f3`)
+- **Vendor & Product Partitions:** 100% stock, unmodified, and preserved.
