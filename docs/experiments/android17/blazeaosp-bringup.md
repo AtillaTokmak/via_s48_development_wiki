@@ -181,3 +181,15 @@ fastboot reboot
 HOME=/tmp adb -P 5038 wait-for-device
 HOME=/tmp adb -P 5038 pull /cache/android17_boot "/home/atilla/Desktop/Via S48/android17_investigation/boot_logs_attempt2"
 ```
+
+---
+
+## 6. Final Conclusion: Android 17 Investigation Concluded
+
+> [!NOTE]
+> ### **FINAL STATUS: CONCLUDED (Incompatible with Linux 4.14 Kernel)**
+>
+> 1. **Live Flashing Outcome:** Candidate V3 was flashed to `system` in `fastbootd` and a clean targeted `userdata` wipe was performed. The device failed to boot to userspace and dropped to LK fastboot after dual preloader cycling.
+> 2. **Technical Grounding:** Android 17 (Cinnamon Bun / API 37) enforces core platform assumptions fundamentally incompatible with the Linux 4.14.141 kernel (mandatory modern eBPF maps, BPF ring buffer, cgroup v2 freezer semantics, modern Bionic syscalls, and strict VINTF FCM requirements).
+> 3. **Strategic Decision:** In accordance with user authorization, further experimental debugging on Android 17 is concluded. **AxionOS 2.9 (Android 16 / API 36)** with the **2.1 GHz custom overclocked kernel** is established as the permanent, verified working daily-driver baseline for the Casper VIA S48.
+

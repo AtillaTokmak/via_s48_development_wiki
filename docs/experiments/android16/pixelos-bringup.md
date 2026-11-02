@@ -15,7 +15,8 @@
 * **Repacked SHA-256:** `02c0a248f2910a33a6b8a25bc3edc2e4a94090537069e20a1e58226887b783e3`
 * **Filesystem Status:** 100% clean (`/sbin/e2fsck -fn` passed all 5 passes with 0 errors across 5,389 files)
 * **Dynamic Partition Margin:** **`263,708,672` bytes (`251.49 MiB`) free headroom** within `super`'s `main` group
-* **Recommendation:** **TECHNICAL GO** (Image verified, fits dynamic partition constraints with large margin, ready for flashing authorization)
+* **Live Flash Outcome:** **CONCLUDED (Bootloop at Casper Logo)** — Device bootloops immediately at the primary Casper bootloader logo prior to Zygote/SystemUI initialization.
+* **Final Recommendation:** **CONCLUDE EXPERIMENTAL DEBUGGING** (AxionOS Android 16 retained as the sole verified, fully functional daily-driver baseline).
 
 ---
 
@@ -156,12 +157,12 @@ fastboot reboot
 
 ---
 
-## 7. Final Recommendation
+## 7. Final Conclusion & Retaining AxionOS Baseline
 
-> [!TIP]
-> ### **FINAL RECOMMENDATION: TECHNICAL GO (Ready for Installation Authorization)**
-> 1. **Complete Android 16 Compatibility:** All device-specific subsystems (VNDK 29, MP2 audio codec fix, early-fs fstab DFE bind-mount, BPF ringbuf bypass, USB controller overrides, and corrected 0644 build.prop permissions) are fully validated.
-> 2. **Canonical Repacking Success:** Repacked using official Android tools (`mke2fs` + `e2fsdroid`) preserving all 5,389 inodes, file permissions, ownerships, relative symlinks, and SELinux contexts.
-> 3. **Dynamic Partition Safety:** The image size of `4,160,749,568` bytes fits within `super` with **`251.49 MiB` of free headroom** in group `main`.
-> 4. **Filesystem Integrity:** Passed `/sbin/e2fsck -fn` 100% clean with zero errors.
-> 5. **Host-Side Only:** No flash or erase operations have been performed on the tablet. Awaiting explicit user authorization before executing installation.
+> [!NOTE]
+> ### **FINAL CONCLUSION: CONCLUDE EXPERIMENTAL DEBUGGING**
+> 
+> 1. **Repacking & Geometry Resolution:** The ext4 image repacking successfully proved that `e2fsdroid` and `mke2fs` can create an ext4 image fitting dynamic partition constraints with 251 MiB of margin and 100% clean filesystem integrity.
+> 2. **Boot Execution Outcome:** Upon live flashing and targeted userdata formatting, the tablet bootloops immediately at the white Casper bootloader logo prior to Zygote/SystemUI initialization, indicating an early kernel/init or linker incompatibility specific to the PixelOS Treble GSI framework.
+> 3. **Strategic Decision:** In agreement with the device owner, further time-consuming debugging of PixelOS and BlazeAOSP is terminated. **AxionOS 2.9 (Android 16 / API 36)** paired with the **2.1 GHz custom kernel** is confirmed as the stable, daily-driver production baseline for the Casper VIA S48.
+> 4. **Rollback:** The system is restored cleanly to `Axion-2.9-patched.img` via fastbootd.
