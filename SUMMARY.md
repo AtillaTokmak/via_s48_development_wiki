@@ -23,6 +23,7 @@
 * [EXP-004: Stock Kernel Compatibility Test](docs/experiments/android16/stock-kernel-test.md)
 * [EXP-005: 2.1 GHz Overclocked Kernel Verification](docs/experiments/android16/oc-2.1ghz-test.md)
 * [EXP-006: Android 17 BlazeAOSP Bring-Up](docs/experiments/android17/blazeaosp-bringup.md)
+* [EXP-007: Android 16 PixelOS Bring-Up](docs/experiments/android16/pixelos-bringup.md)
 
 ## Issues & Root Causes
 * [Issue Tracker Overview](docs/issues/index.md)
