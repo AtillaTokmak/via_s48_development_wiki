@@ -1,7 +1,7 @@
 # Kernel Version Technical Comparison Matrix (`4.14` – `5.15`)
 
 - **Device:** Casper VIA S48 (`MT8168` / `F716`)
-- **Active Baseline:** `Linux 4.14.141` (`kernel_casper_mt8168`, branch `android16-axionos-compat` / `oc-2.1ghz-experimental`)
+- **Active Baseline:** `Linux 4.14.141` (`kernel_casper_mt8168`, branch `android-16` / `oc-2.1ghz-experimental`)
 - **Vendor Baseline:** Stock Android 10 (`VNDK 29`, `target-level="4"`)
 - **Status:** **COMPLETE COMPARATIVE EVALUATION**
 

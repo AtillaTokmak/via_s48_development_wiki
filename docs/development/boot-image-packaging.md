@@ -20,4 +20,4 @@ mkbootimg \
     -o boot_oc_2.1ghz_android16.img
 ```
 
-Automated by [`scripts/pack_boot_android16.sh`](https://github.com/AtillaTokmak/kernel_casper_mt8168/blob/android16-axionos-compat/scripts/pack_boot_android16.sh) in the kernel repository.
+Automated by [`scripts/pack_boot_android16.sh`](https://github.com/AtillaTokmak/kernel_casper_mt8168/blob/android-16/scripts/pack_boot_android16.sh) in the kernel repository.

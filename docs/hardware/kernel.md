@@ -6,7 +6,7 @@ The Casper VIA S48 uses the Linux kernel version **4.14.141** based on MediaTek'
 
 ## 1. Kernel Architecture
 
-* **Source Branch:** `android16-axionos-compat` (based on `origin/oc-2.1ghz-experimental`)
+* **Source Branch:** `android-16` (based on `origin/oc-2.1ghz-experimental`)
 * **Repository:** `https://github.com/AtillaTokmak/kernel_casper_mt8168`
 * **Architecture:** ARM64 (AArch64 little-endian)
 * **Defconfig:** `arch/arm64/configs/tb8168p1_64_bsp_f716_defconfig`

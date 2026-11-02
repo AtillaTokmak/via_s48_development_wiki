@@ -1,3 +1,9 @@
+> ARCHIVED: Unsuccessful Android 16 PixelOS experiment.
+> The image failed to boot successfully on Casper VIA S48.
+> This document is retained for historical debugging only.
+> Flash commands below are historical records, not current installation instructions.
+> Current verified system baseline: AxionOS 2.9 Android 16.
+
 # EXP-004: PixelOS Android 16 GSI Adaptation & Canonical Ext4 Repacking Resolution
 
 ## Metadata

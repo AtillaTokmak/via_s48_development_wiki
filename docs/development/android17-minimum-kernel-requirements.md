@@ -1,7 +1,7 @@
 # Android 17 (Baklava / API 37) Minimum Kernel Requirements Audit
 
 - **Device:** Casper VIA S48 (`MT8168` / `F716`)
-- **Current Working Kernel Baseline:** Linux 4.14.141 (`SMP PREEMPT #10`, 2.1 GHz Overclocked, branch `android16-axionos-compat` / `oc-2.1ghz-experimental`)
+- **Current Working Kernel Baseline:** Linux 4.14.141 (`SMP PREEMPT #10`, 2.1 GHz Overclocked, branch `android-16` / `oc-2.1ghz-experimental`)
 - **Target OS:** Android 17 (Baklava / API Level 37)
 - **Reference Comparison OS:** AxionOS 2.9 (Android 16 QPR2 / API Level 36 — Verified Booting Live on Linux 4.14.141)
 - **Status:** **VERIFIED EMPIRICAL AUDIT**
@@ -124,7 +124,7 @@ While none of the above prevented boot on Linux 4.14.141 once fixed in userspace
 
 ### Recommended Next Steps
 1. **Apply Userspace Fixes First (Zero Kernel Risk):**
-   - Inject `com.android.vndk.v29.apex` into `BlazeAOSP-patched.img` (or PixelOS GSI).
+   - Historical proposal: inject `com.android.vndk.v29.apex` into the experimental BlazeAOSP image. This is not a validated boot solution.
    - Move `fstab.mt8168` bind-mount to `on early-fs` in `casper_compat.rc`.
    - Restore `on load-bpf-programs` -> `setprop bpf.progs_loaded 1` -> `start netd` in `casper_compat.rc`.
    - Add `"Optional": true` to the `Cgroups2` `freezer` entry in `/system/etc/cgroups.json`.

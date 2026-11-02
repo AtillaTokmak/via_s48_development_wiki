@@ -1,6 +1,6 @@
 # Kernel Cross-Compilation: Linux 4.14
 
-Repository: `https://github.com/AtillaTokmak/kernel_casper_mt8168` (Branch: `android16-axionos-compat`)
+Repository: `https://github.com/AtillaTokmak/kernel_casper_mt8168` (Branch: `android-16`)
 
 ---
 

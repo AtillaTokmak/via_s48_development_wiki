@@ -8,7 +8,7 @@ To compile Android 16 cleanly, repositories must be linked under the standard AO
 android_source/
 ├── device/casper/via_s48/      -> device_casper_via_s48
 ├── vendor/casper/via_s48/      -> vendor_casper_via_s48
-└── kernel/casper/mt8168/       -> kernel_casper_mt8168 (android16-axionos-compat)
+└── kernel/casper/mt8168/       -> kernel_casper_mt8168 (android-16)
 ```
 
 ---

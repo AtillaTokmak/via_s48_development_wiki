@@ -8,7 +8,7 @@ Create `.repo/local_manifests/casper_via_s48.xml`:
 <manifest>
     <project path="device/casper/via_s48" name="AtillaTokmak/device_casper_via_s48" remote="github" revision="master" />
     <project path="vendor/casper/via_s48" name="AtillaTokmak/vendor_casper_via_s48" remote="github" revision="master" />
-    <project path="kernel/casper/mt8168" name="AtillaTokmak/kernel_casper_mt8168" remote="github" revision="android16-axionos-compat" />
+    <project path="kernel/casper/mt8168" name="AtillaTokmak/kernel_casper_mt8168" remote="github" revision="android-16" />
 </manifest>
 ```
 

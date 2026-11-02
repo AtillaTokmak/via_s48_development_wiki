@@ -1,7 +1,7 @@
 # MT8168 Kernel Upgrade Feasibility & Strategic Recommendation
 
 - **Device:** Casper VIA S48 (`MT8168` / `F716`)
-- **Current Working Kernel:** `Linux 4.14.141` (`SMP PREEMPT #10`, 2.1 GHz Overclocked, branch `android16-axionos-compat` / `oc-2.1ghz-experimental`)
+- **Current Working Kernel:** `Linux 4.14.141` (`SMP PREEMPT #10`, 2.1 GHz Overclocked, branch `android-16` / `oc-2.1ghz-experimental`)
 - **Current Verified OS:** AxionOS 2.9 (Android 16 QPR2 / API 36)
 - **Target OS:** Android 17 (Baklava / API 37)
 - **Status:** **FEASIBILITY AUDIT COMPLETE**
@@ -79,7 +79,7 @@ If specific Android 17 services benefit from newer kernel primitives after reach
 
 ## 3. Realistic Step-by-Step Implementation Strategy for Android 17
 
-Based on our verified findings, the engineering roadmap to bring Android 17 (BlazeAOSP or PixelOS GSI) to the Casper VIA S48 launcher is:
+The following is an archived, unverified Android 17 BlazeAOSP bring-up proposal. It is not an active development roadmap or an installation guide:
 
 ```mermaid
 flowchart TD
@@ -103,4 +103,4 @@ flowchart TD
 5. **Retain Proven Treble Shims:** Keep `compatibility_matrix.4.xml`, `persist.sys.fuse.bpf.override=false`, `hwservicemanager.always_sets_disabled=false`, sanitized `media_codecs_mediatek_audio.xml`, and `sys.usb.controller=11201000.usb`.
 
 ### Phase 2: Optional Targeted Kernel Backports (Isolated Experimental Branch)
-- Only if post-boot testing reveals a service requiring unified cgroup v2 freezer or a specific modern syscall, create an isolated git branch (`android17-backports-experimental`) from `android16-axionos-compat` without modifying `oc-2.1ghz-experimental` or changing `MODVERSIONS` symbol CRCs used by `via_s48_connsys_preload`.
+- Only if post-boot testing reveals a service requiring unified cgroup v2 freezer or a specific modern syscall, create an isolated git branch (`android17-backports-experimental`) from `android-16` without modifying `oc-2.1ghz-experimental` or changing `MODVERSIONS` symbol CRCs used by `via_s48_connsys_preload`.
