@@ -67,6 +67,7 @@ nav:
       - Android 16 Stock Kernel Test: docs/experiments/android16/stock-kernel-test.md
       - Android 16 2.1 GHz Overclock Test: docs/experiments/android16/oc-2.1ghz-test.md
       - Android 17 BlazeAOSP Bring-Up: docs/experiments/android17/blazeaosp-bringup.md
+      - Android 16 Evolution X USB Gadget Kernel Panic: docs/experiments/android16/evox-usb-gadget-kernel-panic.md
   - Issues & Root Causes:
       - Overview: docs/issues/index.md
       - System Server MP2 Codec Crash: docs/issues/system-server-mp2-crash.md
