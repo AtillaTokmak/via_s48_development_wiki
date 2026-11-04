@@ -4,9 +4,19 @@
 * **Experiment ID:** `EXP-003`
 * **Date:** `2026-10-31`
 * **Target Android Version:** Android 16 (API Level 36)
-* **ROM Source:** `Axion-2.9-GSI_treble_arm64-ab-VANILLA-20261017.img` (Build: `BP4A.251205.006`)
+* **ROM Classification:** Unofficial GSI Adaptation
+* **Upstream GSI Source:** [`https://github.com/Doze-off/axion_aosp/`](https://github.com/Doze-off/axion_aosp/) (`Axion-2.9-GSI_treble_arm64-ab-VANILLA-20261017.img`, Build: `BP4A.251205.006`)
+* **Original GSI Developer:** **Doze-off** and upstream AOSP / AxionOS contributors
+* **Casper VIA S48 Adaptation & Maintenance:** **AtillaTokmak** (hardware bring-up, MP2 audio UBSAN crash remediation, FUSE-BPF bypass, DFE fstab configuration, physical hardware validation, and technical documentation)
 * **Kernel Version:** Linux 4.14.141
 * **Final Result:** **SUCCESS**
+
+---
+
+## Attribution & Project Lineage
+
+* **Original GSI Project:** Developed and published by **Doze-off** and upstream open-source contributors at [`https://github.com/Doze-off/axion_aosp/`](https://github.com/Doze-off/axion_aosp/).
+* **Casper VIA S48 Adaptation:** This release is an **unofficial GSI adaptation**. All device-specific hardware integration, vendor compatibility shims, MP2 audio crash resolution, DFE userdata mounting, and technical documentation were authored by **AtillaTokmak**.
 
 ---
 

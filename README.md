@@ -1,22 +1,38 @@
 # Casper VIA S48 (MT8168 / F716) Development Wiki
 
-
 > **Project status:** Unofficial Casper VIA S48 research and development.
-> AxionOS 2.9 Android 16 is the working GSI baseline. Native LineageOS ROM and Recovery builds are not claimed as completed.
+> Both tested Android 16 operating systems—**AxionOS 2.9** and **Evolution X 11.11**—are **unofficial GSI adaptations**.
+> AxionOS 2.9 Android 16 serves as the working GSI baseline. Native LineageOS ROM and Recovery builds are not claimed as completed.
 > Historical PixelOS work is archived at [PixelOS Android 16](docs/archived/pixelos-android16.md).
 > Experimental reports are not installation instructions unless independently validated.
 
 Welcome to the central technical knowledge base and development wiki for the **Casper VIA S48** tablet.
-This repository documents hardware reverse engineering, Linux 4.14 kernel overclocking, Android 16 (AxionOS 2.9 / API 36) bring-up, proprietary vendor extraction, and device tree maintenance.
+This repository documents hardware reverse engineering, Linux 4.14 kernel overclocking, Android 16 (AxionOS 2.9 & Evolution X 11.11 / API 36) bring-up, proprietary vendor extraction, and device tree maintenance.
+
+---
+
+## Upstream GSI Attribution & Adaptation Credits
+
+Both Android 16 systems evaluated and running on the Casper VIA S48 are **unofficial GSI adaptations**:
+
+* **Evolution X 11.11 (Android 16 / API 36):**
+  * **Upstream GSI Source:** [`https://github.com/Doze-off/EvoX_treble`](https://github.com/Doze-off/EvoX_treble)
+  * **Original GSI Development:** Credited to **Doze-off** and upstream Evolution X contributors.
+  * **Casper VIA S48 Adaptation & Maintenance:** Credited to **AtillaTokmak** for hardware adaptation, MediaTek 4.14 kernel panic remediation (`mtp_free_inst()` / `twrp.sh` configfs removal), DFE ramdisk integration, physical hardware validation, and technical documentation.
+* **AxionOS 2.9 (Android 16 / API 36):**
+  * **Upstream GSI Source:** [`https://github.com/Doze-off/axion_aosp/`](https://github.com/Doze-off/axion_aosp/)
+  * **Original GSI Development:** Credited to **Doze-off** and upstream AOSP / AxionOS contributors.
+  * **Casper VIA S48 Adaptation & Maintenance:** Credited to **AtillaTokmak** for hardware bring-up, MP2 audio UBSAN crash remediation, FUSE-BPF bypass, DFE fstab configuration, physical testing, and technical documentation.
 
 ---
 
 ## 1. Quick Navigation
 
 * **Hardware & Board Architecture:** [MT8168 Architecture](docs/hardware/mt8168.md) | [Partition Table](docs/hardware/partition-layout.md) | [Kernel Architecture](docs/hardware/kernel.md)
-* **Experiments Journal:** [Android 16 Bring-Up](docs/experiments/android16/axionos-bringup.md) | [2.1 GHz Overclock Verification](docs/experiments/android16/oc-2.1ghz-test.md) | [Experiment Index](docs/experiments/index.md)
+* **Experiments Journal:** [Android 16 AxionOS Bring-Up](docs/experiments/android16/axionos-bringup.md) | [Android 16 Evolution X USB Fix](docs/experiments/android16/evox-usb-gadget-kernel-panic.md) | [2.1 GHz Overclock Verification](docs/experiments/android16/oc-2.1ghz-test.md) | [Experiment Index](docs/experiments/index.md)
 * **Critical Issues & Fixes:** [MP2 Audio Crash](docs/issues/system-server-mp2-crash.md) | [FBE Crypto Deadlock](docs/issues/fbe-encryption.md) | [VINTF FCM 4](docs/issues/vintf-fcm4.md)
 * **Build Integration:** [Device Tree](docs/development/device-tree.md) | [Vendor Tree](docs/development/vendor-tree.md) | [Kernel Compilation](docs/development/kernel-build.md)
+* **References:** [Official Repositories](docs/references/repositories.md) | [Upstream Sources & Attribution](docs/references/upstream-sources.md)
 
 ---
 

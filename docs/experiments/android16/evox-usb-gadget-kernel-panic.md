@@ -5,11 +5,21 @@
 * **Date:** `2026-11-04`
 * **Target Device:** Casper VIA S48 (MediaTek MT8168B, F716 board)
 * **Target Android Version:** Android 16 (API Level 36, Baklava / Android 16 QPR2)
-* **ROM Source:** `EvoX-11.11-GSI_treble_arm64-ab-MICROG-20260920.img` (Evolution X 11.11 Treble GSI)
+* **ROM Classification:** Unofficial GSI Adaptation
+* **Upstream GSI Source:** [`https://github.com/Doze-off/EvoX_treble`](https://github.com/Doze-off/EvoX_treble) (`EvoX-11.11-GSI_treble_arm64-ab-MICROG-20260920.img`)
+* **Original GSI Developer:** **Doze-off** and upstream Evolution X contributors
+* **Casper VIA S48 Adaptation & Maintenance:** **AtillaTokmak** (hardware bring-up, MediaTek 4.14 kernel panic remediation in `mtp_free_inst()` / `twrp.sh` configfs removal, DFE ramdisk integration, physical hardware validation, and technical documentation)
 * **Kernel Version:** Linux 4.14.141 (`#10 SMP PREEMPT` in boot image / `#1` in recovery)
 * **Patched Intermediate Image:** `EvoX-A16-Casper-VIA-S48-patched.img`
 * **Corrected Output Image:** `EvoX-A16-Casper-VIA-S48-usbfix.img`
 * **Final Result:** **SUCCESS (VERIFIED BOOT ON HARDWARE)**
+
+---
+
+## Attribution & Project Lineage
+
+* **Original Upstream GSI:** Developed and maintained by **Doze-off** and upstream contributors at [`https://github.com/Doze-off/EvoX_treble`](https://github.com/Doze-off/EvoX_treble).
+* **Casper VIA S48 Adaptation:** This is an **unofficial GSI adaptation**. Investigation of the MT8168 4.14 kernel panic, configfs teardown diagnosis, binary/script patch authoring, physical hardware flashing, and technical documentation were performed by **AtillaTokmak**.
 
 ---
 
@@ -21,7 +31,7 @@
 | **Board / Platform ID** | `ro.board.platform=mt8168`, MT6631 Wi-Fi/BT combo |
 | **Kernel Build** | Linux 4.14.141 `#10 SMP PREEMPT` (`boot_oc_2.1ghz_android16.img`) |
 | **Kernel Command Line** | `bootopt=64S3,32N2,64N2 buildvariant=user androidboot.selinux=permissive` |
-| **Target ROM** | Evolution X 11.11 Android 16 Treble ARM64 AB (microG edition) |
+| **Target ROM** | Unofficial GSI Adaptation: Evolution X 11.11 Android 16 Treble ARM64 AB (microG edition) (Upstream: [Doze-off/EvoX_treble](https://github.com/Doze-off/EvoX_treble)) |
 | **Partition Topology** | Dynamic Partitions (`super.img`: `system`, `vendor`, `product`) |
 | **System Partition Ceiling** | 4,424,458,240 bytes (EXT4 filesystem, no EROFS kernel support) |
 | **Baseline Reference** | AxionOS 2.9 Android 16 (`EXP-003`, `EXP-005` - verified working baseline) |
