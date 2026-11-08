@@ -17,23 +17,27 @@
 
 ## Experiments Journal
 * [Experiment Index](docs/experiments/index.md)
-* [EXP-001: Android 14 GSI Bring-Up](docs/experiments/android14/gsi-bringup.md)
-* [EXP-002: Android 15 crDroid Bootloop](docs/experiments/android15/crdroid-bootloop.md)
-* [EXP-003: Android 16 AxionOS Bring-Up](docs/experiments/android16/axionos-bringup.md)
 * [EXP-004: Stock Kernel Compatibility Test](docs/experiments/android16/stock-kernel-test.md)
 * [EXP-005: 2.1 GHz Overclocked Kernel Verification](docs/experiments/android16/oc-2.1ghz-test.md)
-* [EXP-006: Android 17 BlazeAOSP Bring-Up](docs/experiments/android17/blazeaosp-bringup.md)
-* [EXP-007: Android 16 Evolution X USB Gadget Kernel Panic](docs/experiments/android16/evox-usb-gadget-kernel-panic.md)
+* [EXP-008: Hardware Fixes (Camera, Flash, Keys)](docs/experiments/android16/hardware-fixes-test.md)
 
 ## Issues & Root Causes
 * [Issue Tracker Overview](docs/issues/index.md)
 * [ISSUE-01: System Server MP2 Codec UBSAN Crash](docs/issues/system-server-mp2-crash.md)
 * [ISSUE-02: File-Based Encryption (FBE) Deadlock](docs/issues/fbe-encryption.md)
 * [ISSUE-03: VINTF FCM Level 4 Integration](docs/issues/vintf-fcm4.md)
-* [ISSUE-04: Legacy FUSE and eBPF Storage](docs/issues/fuse-bpf.md)
 * [ISSUE-05: SELinux Vendor Policy Compatibility](docs/issues/selinux-compatibility.md)
-* [ISSUE-06: USB UDC Gadget Binding](docs/issues/usb-adb-initialization.md)
 * [ISSUE-07: Android 16 VNDK Deprecation & Vendor Dependencies](docs/issues/vndk-deprecation.md)
+
+## Archived Experiments & Diagnostics
+* [EXP-001: Android 14 GSI Bring-Up](docs/archived/exp-001-android14-gsi.md)
+* [EXP-002: Android 15 crDroid Bootloop](docs/archived/exp-002-android15-crdroid-gsi.md)
+* [EXP-003: Android 16 AxionOS GSI Bring-Up](docs/archived/exp-003-android16-axionos-gsi.md)
+* [EXP-006: Android 17 BlazeAOSP Evaluation](docs/archived/exp-006-android17-blazeaosp-gsi.md)
+* [EXP-007: Android 16 Evolution X Kernel Panic Remediation](docs/archived/exp-007-android16-evox-panic.md)
+* [EXP-PixelOS: PixelOS Android 16 GSI Audit](docs/archived/pixelos-android16.md)
+* [ISSUE-04: Legacy FUSE and eBPF Storage](docs/archived/issue-04-fuse-bpf.md)
+* [ISSUE-06: USB UDC Gadget Binding](docs/archived/issue-06-usb-adb-init.md)
 
 ## Patches & Modifications
 * [Patch Overview](docs/patches/index.md)

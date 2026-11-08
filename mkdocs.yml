@@ -61,22 +61,25 @@ nav:
       - Dynamic Partitions: docs/firmware/dynamic-partitions.md
   - Experiments Journal:
       - Overview: docs/experiments/index.md
-      - Android 14 GSI Bring-Up: docs/experiments/android14/gsi-bringup.md
-      - Android 15 crDroid Bootloop: docs/experiments/android15/crdroid-bootloop.md
-      - Android 16 AxionOS Bring-Up: docs/experiments/android16/axionos-bringup.md
       - Android 16 Stock Kernel Test: docs/experiments/android16/stock-kernel-test.md
       - Android 16 2.1 GHz Overclock Test: docs/experiments/android16/oc-2.1ghz-test.md
-      - Android 17 BlazeAOSP Bring-Up: docs/experiments/android17/blazeaosp-bringup.md
-      - Android 16 Evolution X USB Gadget Kernel Panic: docs/experiments/android16/evox-usb-gadget-kernel-panic.md
+      - Hardware Fixes (Camera, Flash, Keys): docs/experiments/android16/hardware-fixes-test.md
   - Issues & Root Causes:
       - Overview: docs/issues/index.md
       - System Server MP2 Codec Crash: docs/issues/system-server-mp2-crash.md
       - File-Based Encryption Deadlock: docs/issues/fbe-encryption.md
       - VINTF FCM Level 4 Integration: docs/issues/vintf-fcm4.md
-      - Legacy FUSE & eBPF Storage: docs/issues/fuse-bpf.md
       - SELinux Compatibility: docs/issues/selinux-compatibility.md
-      - USB UDC Gadget Binding: docs/issues/usb-adb-initialization.md
       - Android 16 VNDK Deprecation: docs/issues/vndk-deprecation.md
+  - Archived Experiments:
+      - Android 14 GSI Bring-Up: docs/archived/exp-001-android14-gsi.md
+      - Android 15 crDroid Bootloop: docs/archived/exp-002-android15-crdroid-gsi.md
+      - Android 16 AxionOS GSI: docs/archived/exp-003-android16-axionos-gsi.md
+      - Android 16 EvoX Kernel Panic: docs/archived/exp-007-android16-evox-panic.md
+      - Android 17 BlazeAOSP Evaluation: docs/archived/exp-006-android17-blazeaosp-gsi.md
+      - PixelOS GSI Audit: docs/archived/pixelos-android16.md
+      - Legacy FUSE & eBPF Storage: docs/archived/issue-04-fuse-bpf.md
+      - USB UDC Gadget Binding: docs/archived/issue-06-usb-adb-init.md
   - Patches & Modifications:
       - Overview: docs/patches/index.md
       - Patch Inventory: docs/patches/patch-inventory.md
