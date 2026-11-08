@@ -29,7 +29,7 @@ Both Android 16 systems evaluated and running on the Casper VIA S48 are **unoffi
 ## 1. Quick Navigation
 
 * **Hardware & Board Architecture:** [MT8168 Architecture](docs/hardware/mt8168.md) | [Partition Table](docs/hardware/partition-layout.md) | [Kernel Architecture](docs/hardware/kernel.md)
-* **Experiments Journal:** [Android 16 AxionOS Bring-Up](docs/experiments/android16/axionos-bringup.md) | [Android 16 Evolution X USB Fix](docs/experiments/android16/evox-usb-gadget-kernel-panic.md) | [2.1 GHz Overclock Verification](docs/experiments/android16/oc-2.1ghz-test.md) | [Experiment Index](docs/experiments/index.md)
+* **Experiments Journal:** [Hardware Fixes Verification](docs/experiments/android16/hardware-fixes-test.md) | [2.1 GHz Overclock Verification](docs/experiments/android16/oc-2.1ghz-test.md) | [Android 16 AxionOS Bring-Up (Archived)](docs/archived/exp-003-android16-axionos-gsi.md) | [Android 16 Evolution X USB Fix (Archived)](docs/archived/exp-007-android16-evox-panic.md) | [Experiment Index](docs/experiments/index.md)
 * **Critical Issues & Fixes:** [MP2 Audio Crash](docs/issues/system-server-mp2-crash.md) | [FBE Crypto Deadlock](docs/issues/fbe-encryption.md) | [VINTF FCM 4](docs/issues/vintf-fcm4.md)
 * **Build Integration:** [Device Tree](docs/development/device-tree.md) | [Vendor Tree](docs/development/vendor-tree.md) | [Kernel Compilation](docs/development/kernel-build.md)
 * **References:** [Official Repositories](docs/references/repositories.md) | [Upstream Sources & Attribution](docs/references/upstream-sources.md)

@@ -20,4 +20,4 @@ When an Android port hangs at the boot animation, the kernel, display hardware, 
    grep -E "FATAL|SIGABRT|Abort message|AndroidRuntime: FATAL" boot_crash.log
    ```
 5. If `AudioCapabilities: Unsupported mediaType audio/mpeg-L2` appears, verify [ISSUE-01](../issues/system-server-mp2-crash.md).
-6. If `vold: FUSE-BPF` appears, verify [ISSUE-04](../issues/fuse-bpf.md).
+6. If `vold: FUSE-BPF` appears, verify [ISSUE-04](../archived/issue-04-fuse-bpf.md).
